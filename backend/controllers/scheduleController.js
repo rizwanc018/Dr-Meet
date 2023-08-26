@@ -49,48 +49,38 @@ const scheduleController = {
         res.status(200).json({ days: response })
     }),
     getScheduleTimes: asyncHandler(async (req, res) => {
-        const { docId } = req.body
-        console.log("🚀 ~ file: scheduleController.js:53 ~ getScheduleTimes:asyncHandler ~ docId:", docId)
+        const { docId, day } = req.body
         let { date } = req.body
         date = moment(date).startOf('day')
-        const day = date.day().toString()
         console.log("🚀 ~ file: scheduleController.js:59 ~ getScheduleTimes:asyncHandler ~ day:", day)
 
-        // const [schedules, booked] = await Promise.all([
-        //     Schedule.find({ docId, day }),
-        //     Appointment.find({ docId, date: date.toISOString() }),
-        // ]);
+
+        // const schedules = await Schedule.find({ docId, day })              
+        // const booked = await Appointment.find({ docId, date: date.toISOString() })
         try {
-            // const schedules = await Schedule.find({ docId: docId, day: day })
-            const schedules = await Schedule.find({
-                $and: [
-                  { docId: docId },
-                  { day: day }
-                ]
-              });
-              
+            const schedules = await Schedule.find({ docId, day })
+            console.log("🚀 ~ file: scheduleController.js:63 ~ getScheduleTimes:asyncHandler ~ schedules:", schedules)
             const booked = await Appointment.find({ docId, date: date.toISOString() })
-            console.log("🚀 ~ file: scheduleController.js:65 ~ getScheduleTimes:asyncHandler ~ schedules:", schedules)
-            console.log("🚀 ~ file: scheduleController.js:62 ~ getScheduleTimes:asyncHandler ~ booked:", booked)
-
-            console.log('>>>>>>>>>>>>>>>>>>>> Date Sec <<<<<<<<<<<<<<<<<<<<<')
-            const iso = await Appointment.find({ docId, date: date.toISOString() })
-            console.log("🚀 ~ file: scheduleController.js:70 ~ getScheduleTimes:asyncHandler ~ iso:", iso)
-            const local = await Appointment.find({ docId, date: date.local() })
-            console.log("🚀 ~ file: scheduleController.js:72 ~ getScheduleTimes:asyncHandler ~ local:", local)
-            const jusDate = await Appointment.find({ docId, date })
-
+            console.log("🚀 ~ file: scheduleController.js:64 ~ getScheduleTimes:asyncHandler ~ booked:", booked)
+           
+            const toIsobooked = await Appointment.find({ docId, date: date.toISOString() })
+            console.log("🚀 ~ file: scheduleController.js:67 ~ getScheduleTimes:asyncHandler ~ date.toISOString():", date.toISOString())
+            console.log("🚀 ~ file: scheduleController.js:66 ~ getScheduleTimes:asyncHandler ~ toIsobooked:", toIsobooked)
+            const toStringBooked = await Appointment.find({ docId, date: date.toString() })
+            console.log("🚀 ~ file: scheduleController.js:70 ~ getScheduleTimes:asyncHandler ~ date.toString():", date.toString())
+            console.log("🚀 ~ file: scheduleController.js:69 ~ getScheduleTimes:asyncHandler ~ toStringBooked:", toStringBooked)
+            const justbooked = await Appointment.find({ docId, date: date })
+            console.log("🚀 ~ file: scheduleController.js:73 ~ getScheduleTimes:asyncHandler ~ date:", date)
+            console.log("🚀 ~ file: scheduleController.js:73 ~ getScheduleTimes:asyncHandler ~ b:", b)
 
 
             const filtered = filterTimeWithoutAppointments(schedules, booked)
-            console.log("🚀 ~ file: scheduleController.js:69 ~ getScheduleTimes:asyncHandler ~ filtered:", filtered)
 
             const timesArray = filtered.map(item => ({
                 _id: item._id,
                 startTime: item.startTime,
                 endTime: item.endTime,
             }));
-            console.log("🚀 ~ file: scheduleController.js:76 ~ timesArray ~ timesArray:", timesArray)
 
             res.status(200).json({ success: true, timesArray })
         } catch (error) {
