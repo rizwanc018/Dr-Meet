@@ -12,9 +12,7 @@ const MakeAppointmentForm = ({ schedule, id }) => {
     const [days, setDays] = useState([]) // doc scheduled days, passed from parent component
     const [date, setDate] = useState(new Date()); // booking date
     const [times, setTimes] = useState() // booking time
-    console.log({times})
     const [showTimeSelector, setShowTimeSelector] = useState(false)
-    console.log({showTimeSelector})
     const [timeId, setTimeId] = useState('') // time choosen
     const [showBooking, setShowBooking] = useState(false)
     const [errMsg, setErrMsg] = useState()
@@ -24,18 +22,42 @@ const MakeAppointmentForm = ({ schedule, id }) => {
         setDays([...schedule])
     }, [schedule])
 
+    useEffect(() => {
+        if(times && times.length > 0) {
+            setShowTimeSelector(true)
+        } else {
+            setShowTimeSelector(false)
+        }
+    },[times])
+
     // Calender
+    // const handleChange = async (date) => {
+    //     setTimeId('')
+    //     setShowBooking(false)
+    //     setLoading(true)
+    //     setDate(date)
+    //     try {
+    //         console.log({ docId, date })
+    //         const response = await AxiosBackend.post('/api/user/schedule/times', { docId, date })
+    //         console.log({response})
+    //         if (response.data.timesArray) setShowTimeSelector(true)
+    //         setTimes(response.data.timesArray);
+    //     } catch (error) {
+    //         setErrMsg('Somthing wrong')
+    //     }
+    //     setLoading(false)
+    // }
+
     const handleChange = async (date) => {
         setTimeId('')
         setShowBooking(false)
         setLoading(true)
         setDate(date)
         try {
-            console.log({ docId, date })
             const response = await AxiosBackend.post('/api/user/schedule/times', { docId, date })
             console.log({response})
-            if (response.data.timesArray) setShowTimeSelector(true)
-            setTimes(response.data.timesArray);
+            if (response.data.timesArray) setTimes(response.data.timesArray);
+            console.log(times)
         } catch (error) {
             setErrMsg('Somthing wrong')
         }
