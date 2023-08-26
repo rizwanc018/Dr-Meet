@@ -31,7 +31,7 @@ const scheduleController = {
     }),
     getSchedules: asyncHandler(async (req, res) => {
         const docId = req.doctor._id
-        const day = req.params.day        
+        const day = req.params.day
         const response = await Schedule.find({ docId, day }).sort({ day: 1, startTime: 1 })
 
         res.status(200).json({ success: true, schedules: response })
@@ -49,13 +49,10 @@ const scheduleController = {
         res.status(200).json({ days: response })
     }),
     getScheduleTimes: asyncHandler(async (req, res) => {
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>> Iam Getting Request <<<<<<<<<<<<<<<<<<<<<<<<')
         const { docId } = req.body
         console.log("🚀 ~ file: scheduleController.js:53 ~ getScheduleTimes:asyncHandler ~ docId:", docId)
         let { date } = req.body
-        console.log("🚀 ~ file: scheduleController.js:55 ~ getScheduleTimes:asyncHandler ~ date:", date)
         date = moment(date).startOf('day')
-        console.log("🚀 ~ file: scheduleController.js:57 ~ getScheduleTimes:asyncHandler ~ date:", date)
         const day = date.day().toString()
         console.log("🚀 ~ file: scheduleController.js:59 ~ getScheduleTimes:asyncHandler ~ day:", day)
 
@@ -63,9 +60,12 @@ const scheduleController = {
         //     Schedule.find({ docId, day }),
         //     Appointment.find({ docId, date: date.toISOString() }),
         // ]);
-
-        const schedules = await Schedule.find({ docId, day })
-        const booked = await Appointment.find({ docId, date: date.toISOString() })
+        try {
+            const schedules = await Schedule.find({ docId, day })
+            const booked = await Appointment.find({ docId, date: date.toISOString() })
+        } catch (error) {
+            console.log({error})
+        }
 
         console.log("🚀 ~ file: scheduleController.js:65 ~ getScheduleTimes:asyncHandler ~ schedules:", schedules)
         console.log("🚀 ~ file: scheduleController.js:62 ~ getScheduleTimes:asyncHandler ~ booked:", booked)
@@ -77,7 +77,7 @@ const scheduleController = {
             _id: item._id,
             startTime: item.startTime,
             endTime: item.endTime,
-          }));
+        }));
         console.log("🚀 ~ file: scheduleController.js:76 ~ timesArray ~ timesArray:", timesArray)
 
         res.status(200).json({ success: true, timesArray })
