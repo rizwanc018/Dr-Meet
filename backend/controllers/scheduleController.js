@@ -65,22 +65,21 @@ const scheduleController = {
             const booked = await Appointment.find({ docId, date: date.toISOString() })
             console.log("🚀 ~ file: scheduleController.js:65 ~ getScheduleTimes:asyncHandler ~ schedules:", schedules)
             console.log("🚀 ~ file: scheduleController.js:62 ~ getScheduleTimes:asyncHandler ~ booked:", booked)
+
+            const filtered = filterTimeWithoutAppointments(schedules, booked)
+            console.log("🚀 ~ file: scheduleController.js:69 ~ getScheduleTimes:asyncHandler ~ filtered:", filtered)
+
+            const timesArray = filtered.map(item => ({
+                _id: item._id,
+                startTime: item.startTime,
+                endTime: item.endTime,
+            }));
+            console.log("🚀 ~ file: scheduleController.js:76 ~ timesArray ~ timesArray:", timesArray)
+
+            res.status(200).json({ success: true, timesArray })
         } catch (error) {
-            console.log({error})
+            console.log({ error })
         }
-
-
-        const filtered = filterTimeWithoutAppointments(schedules, booked)
-        console.log("🚀 ~ file: scheduleController.js:69 ~ getScheduleTimes:asyncHandler ~ filtered:", filtered)
-
-        const timesArray = filtered.map(item => ({
-            _id: item._id,
-            startTime: item.startTime,
-            endTime: item.endTime,
-        }));
-        console.log("🚀 ~ file: scheduleController.js:76 ~ timesArray ~ timesArray:", timesArray)
-
-        res.status(200).json({ success: true, timesArray })
     }),
 }
 
