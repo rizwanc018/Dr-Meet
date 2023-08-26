@@ -25,6 +25,7 @@ const MakeAppointmentForm = ({ schedule, id }) => {
     useEffect(() => {
         if(times && times.length > 0) {
             setShowTimeSelector(true)
+            console.log(times)
         } else {
             setShowTimeSelector(false)
         }
@@ -57,7 +58,6 @@ const MakeAppointmentForm = ({ schedule, id }) => {
             const response = await AxiosBackend.post('/api/user/schedule/times', { docId, date })
             console.log({response})
             if (response.data.timesArray) setTimes(response.data.timesArray);
-            console.log(times)
         } catch (error) {
             setErrMsg('Somthing wrong')
         }
