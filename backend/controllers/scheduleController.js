@@ -53,8 +53,8 @@ const scheduleController = {
         let { date } = req.body
         console.log('>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<')
         console.log("🚀 ~ file: scheduleController.js:54 ~ getScheduleTimes:asyncHandler ~ date:", date)
-        date = moment(date).startOf('day')
-        console.log("🚀 ~ file: scheduleController.js:57 ~ getScheduleTimes:asyncHandler ~ date after moment:", date)
+        // date = moment(date).startOf('day')
+        // console.log("🚀 ~ file: scheduleController.js:57 ~ getScheduleTimes:asyncHandler ~ date after moment:", date)
         console.log('>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<')
 
 
@@ -62,14 +62,17 @@ const scheduleController = {
         // const schedules = await Schedule.find({ docId, day })              
         // const booked = await Appointment.find({ docId, date: date.toISOString() })
         try {
-            // db.collection.find({ dateField: { $eq: new Date("2023-08-26") } });
+            // date: moment(date).format('DD-MMM-YYYY')
 
             const schedules = await Schedule.find({ docId, day })
             const booked = await Appointment.find({ docId, date: { $eq: new Date(date) } })
-            console.log("🚀 ~ file: scheduleController.js:69 ~ getScheduleTimes:asyncHandler ~ new Date(date):", new Date(date))
-            console.log("🚀 ~ file: scheduleController.js:67 ~ getScheduleTimes:asyncHandler ~ date.toISOString():", date.toISOString())
+            // console.log("🚀 ~ file: scheduleController.js:69 ~ getScheduleTimes:asyncHandler ~ booked:", booked)
+
+
+            // console.log("🚀 ~ file: scheduleController.js:69 ~ getScheduleTimes:asyncHandler ~ new Date(date):", new Date(date))
+            // console.log("🚀 ~ file: scheduleController.js:67 ~ getScheduleTimes:asyncHandler ~ date.toISOString():", date.toISOString())
             console.log("🚀 ~ file: scheduleController.js:64 ~ getScheduleTimes:asyncHandler ~ booked:", booked)
-           
+
             // const toIsobooked = await Appointment.find({ docId, date: date.toISOString() })
             // console.log("🚀 ~ file: scheduleController.js:67 ~ getScheduleTimes:asyncHandler ~ date.toISOString():", date.toISOString())
             // console.log("🚀 ~ file: scheduleController.js:66 ~ getScheduleTimes:asyncHandler ~ toIsobooked:", toIsobooked)
