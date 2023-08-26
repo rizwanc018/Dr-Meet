@@ -63,12 +63,12 @@ const scheduleController = {
         try {
             const schedules = await Schedule.find({ docId, day })
             const booked = await Appointment.find({ docId, date: date.toISOString() })
+            console.log("🚀 ~ file: scheduleController.js:65 ~ getScheduleTimes:asyncHandler ~ schedules:", schedules)
+            console.log("🚀 ~ file: scheduleController.js:62 ~ getScheduleTimes:asyncHandler ~ booked:", booked)
         } catch (error) {
             console.log({error})
         }
 
-        console.log("🚀 ~ file: scheduleController.js:65 ~ getScheduleTimes:asyncHandler ~ schedules:", schedules)
-        console.log("🚀 ~ file: scheduleController.js:62 ~ getScheduleTimes:asyncHandler ~ booked:", booked)
 
         const filtered = filterTimeWithoutAppointments(schedules, booked)
         console.log("🚀 ~ file: scheduleController.js:69 ~ getScheduleTimes:asyncHandler ~ filtered:", filtered)
