@@ -59,24 +59,12 @@ const scheduleController = {
             Appointment.find({ docId, date: date.toISOString() }),
         ]);
 
-        // const filtered = filterTimeWithoutAppointments(schedules, booked)
-
-        // const timesArray = filtered.map(item => ({
-        //     _id: item._id,
-        //     startTime: item.startTime,
-        //     endTime: item.endTime,
-        //     // startTime: moment(item.startTime).format('h:mm A'),
-        //     // endTime: moment(item.endTime).format('h:mm A'),
-        //   }));
-
         const filtered = filterTimeWithoutAppointments(schedules, booked)
 
-        const timesArray = schedules.map(item => ({
+        const timesArray = filtered.map(item => ({
             _id: item._id,
             startTime: item.startTime,
             endTime: item.endTime,
-            // startTime: moment(item.startTime).format('h:mm A'),
-            // endTime: moment(item.endTime).format('h:mm A'),
           }));
 
         res.status(200).json({ success: true, timesArray })
