@@ -61,7 +61,14 @@ const scheduleController = {
         //     Appointment.find({ docId, date: date.toISOString() }),
         // ]);
         try {
-            const schedules = await Schedule.find({ docId: docId, day: day })
+            // const schedules = await Schedule.find({ docId: docId, day: day })
+            const schedules = await Schedule.find({
+                $and: [
+                  { docId: docId },
+                  { day: day }
+                ]
+              });
+              
             const booked = await Appointment.find({ docId, date: date.toISOString() })
             console.log("🚀 ~ file: scheduleController.js:65 ~ getScheduleTimes:asyncHandler ~ schedules:", schedules)
             console.log("🚀 ~ file: scheduleController.js:62 ~ getScheduleTimes:asyncHandler ~ booked:", booked)
