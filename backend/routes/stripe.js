@@ -15,9 +15,9 @@ const stripe = Stripe(process.env.STRIPE_API_KEY)
 
 router.post('/webhook', express.json({ type: 'application/json' }), async (req, res) => {
     let event = req.body
-    let data
     let payload = req.body
     if (event.type === 'checkout.session.completed') {
+        console.log("🚀 ~ file: stripe.js:20 ~ router.post ~ event.type:", event.type)
         const payment_intent = payload.data.object.payment_intent
         stripe.customers
             .retrieve(payload.data.object.customer)
