@@ -32,8 +32,8 @@ router.post('/webhook', express.json({ type: 'application/json' }), async (req, 
     //     data = event.data.object
     // } catch (err) {
     //     console.log(err)
-    //     // res.status(400).send(`Webhook Error: ${err.message}`);
-    //     // return;
+    //     res.status(400).send(`Webhook Error: ${err.message}`);
+    //     return;
     // }
     // console.log("🚀 ~ file: stripe.js:33 ~ //router.post ~ event:", event)
     if (event.type === 'checkout.session.completed') {
@@ -41,7 +41,7 @@ router.post('/webhook', express.json({ type: 'application/json' }), async (req, 
         const payment_intent = payload.data.object.payment_intent
         console.log("🚀 ~ file: stripe.js:41 ~ //router.post ~ payment_intent:", payment_intent)
         stripe.customers
-            .retrieve(data.customer)
+            .retrieve(payload.data.object.customer)
             .then(async (customer) => {
                 try {
                     const { docId, timeId, date, userId } = customer.metadata
