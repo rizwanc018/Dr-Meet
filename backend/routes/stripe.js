@@ -36,10 +36,10 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
         // res.status(400).send(`Webhook Error: ${err.message}`);
         return;
     }
-
+    
+    console.log("🚀 ~ file: stripe.js:33 ~ //router.post ~ event:", event)
     if (event.type === 'checkout.session.completed') {
         payload = JSON.parse(payload)
-        console.log("🚀 ~ file: stripe.js:42 ~ //router.post ~ payload:", payload)
         const payment_intent = payload.data.object.payment_intent
         stripe.customers
             .retrieve(data.customer)
