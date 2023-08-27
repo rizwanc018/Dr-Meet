@@ -18,15 +18,14 @@ const router = express.Router()
 const stripe = Stripe(process.env.STRIPE_API_KEY)
 
 //    stripe listen --forward-to localhost:5000/api/stripe/webhook
-router.post('/webhook', bodyParser.json({ type: 'application/json' }), async (req, res) => {
-    // router.post('/webhook', express.raw({ type: '*/*' }), async (req, res) => {
-    let signinsecret = 'whsec_ef2dfc5887f870636fe513da6ef308b0c2f9b58764289374fa74f1cb4ea58f80'
-    const sig = req.headers['stripe-signature'];
+router.post('/webhook', express.json({ type: 'application/json' }), async (req, res) => {
+    // router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+    // let signinsecret = 'whsec_ef2dfc5887f870636fe513da6ef308b0c2f9b58764289374fa74f1cb4ea58f80'
+    // const sig = req.headers['stripe-signature'];
     let event = req.body
     console.log("🚀 ~ file: stripe.js:26 ~ //router.post ~ event:", event)
     let data
     let payload = req.body
-    console.log("🚀 ~ file: stripe.js:29 ~ //router.post ~ payload:", payload)
     // console.log("🚀 ~ file: stripe.js:29 ~ //router.post ~ req.body:", req.body)
     // try {
     //     event = await stripe.webhooks.constructEvent(req.body, sig, signinsecret);
@@ -38,14 +37,17 @@ router.post('/webhook', bodyParser.json({ type: 'application/json' }), async (re
     // }
     // console.log("🚀 ~ file: stripe.js:33 ~ //router.post ~ event:", event)
     if (event.type === 'checkout.session.completed') {
-        payload = JSON.parse(payload)
+        // payload = JSON.parse(payload)
         const payment_intent = payload.data.object.payment_intent
+        console.log("🚀 ~ file: stripe.js:41 ~ //router.post ~ payment_intent:", payment_intent)
         stripe.customers
             .retrieve(data.customer)
             .then(async (customer) => {
                 try {
                     const { docId, timeId, date, userId } = customer.metadata
+                    console.log({ docId, timeId, date, userId })
                     const patientId = userId.slice(1, -1)
+                    console.log("🚀 ~ file: stripe.js:49 ~ .then ~ patientId:", patientId)
                     const response = await Appointment.create({ docId, timeId, date, patientId, payment_intent })
                     if (response) res.status(200).json({ success: true })
                 } catch (error) {
