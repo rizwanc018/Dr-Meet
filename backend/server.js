@@ -183,15 +183,17 @@ io.on('connection', (socket) => {
 app.use(morgan('dev'))
 app.use(express.urlencoded({ extends: true }))
 app.use(cookieParser())
-app.use(`/api/stripe`, stripeRouter)
-app.use(express.json())
-// 
+
 const corsOptions = {
     origin: process.env.CLIENT_URL,
     credentials: true,            //access-control-allow-credentials:true
     optionSuccessStatus: 200
 }
 app.use(cors(corsOptions));
+
+app.use(`/api/stripe`, stripeRouter)
+app.use(express.json())
+// 
 // 
 app.use('/api/admin', adminRouter);
 app.use('/api/doc', doctorRouter);
