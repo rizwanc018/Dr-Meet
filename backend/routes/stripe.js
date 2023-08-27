@@ -17,12 +17,21 @@ const stripe = Stripe(process.env.STRIPE_API_KEY)
 
 //    stripe listen --forward-to localhost:5000/api/stripe/webhook
 router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req, res) => {
+    // router.post('/webhook', bodyParser.raw({ type: '*/*' }), async (req, res) => {
+
     console.log('>>>>>>>>>>>>>>>>>>>>> Got Call in webhook <<<<<<<<<<<<<<<<<')
     let signinsecret = 'whsec_ef2dfc5887f870636fe513da6ef308b0c2f9b58764289374fa74f1cb4ea58f80'
     const sig = req.headers['stripe-signature'];
     let event
     let data
-    let payload = req.body;
+    let payload = req.body
+    console.log("🚀 ~ file: stripe.js:28 ~ router.post ~ payload:", payload)
+
+    if(req.rawBody) {
+        console.log("🚀 ~ file: stripe.js:31 ~ router.post ~ req.rawBody:", req.rawBody)
+        
+    }
+
 
     try {
         event = await stripe.webhooks.constructEvent(req.body, sig, signinsecret);
