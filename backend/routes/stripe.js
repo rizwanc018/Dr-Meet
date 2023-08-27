@@ -19,25 +19,11 @@ const stripe = Stripe(process.env.STRIPE_API_KEY)
 
 //    stripe listen --forward-to localhost:5000/api/stripe/webhook
 router.post('/webhook', express.json({ type: 'application/json' }), async (req, res) => {
-    // router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-    // let signinsecret = 'whsec_ef2dfc5887f870636fe513da6ef308b0c2f9b58764289374fa74f1cb4ea58f80'
-    // const sig = req.headers['stripe-signature'];
     let event = req.body
     console.log("🚀 ~ file: stripe.js:26 ~ //router.post ~ event:", event)
     let data
     let payload = req.body
-    // console.log("🚀 ~ file: stripe.js:29 ~ //router.post ~ req.body:", req.body)
-    // try {
-    //     event = await stripe.webhooks.constructEvent(req.body, sig, signinsecret);
-    //     data = event.data.object
-    // } catch (err) {
-    //     console.log(err)
-    //     res.status(400).send(`Webhook Error: ${err.message}`);
-    //     return;
-    // }
-    // console.log("🚀 ~ file: stripe.js:33 ~ //router.post ~ event:", event)
     if (event.type === 'checkout.session.completed') {
-        // payload = JSON.parse(payload)
         const payment_intent = payload.data.object.payment_intent
         console.log("🚀 ~ file: stripe.js:41 ~ //router.post ~ payment_intent:", payment_intent)
         stripe.customers
@@ -98,8 +84,8 @@ router.post('/create-checkout-session', express.json(), verifyUser, asyncHandler
         ],
         customer: customer.id,
         mode: 'payment',
-        success_url: `${process.env.CLIENT_URL}/appointment-success`,
-        cancel_url: `${process.env.CLIENT_URL}/doctors`,
+        success_url: `${process.env.STRIPE_RESPONSE_URL}/appointment-success`,
+        cancel_url: `${process.env.STRIPE_RESPONSE_URL}/doctors`,
     });
 
 
