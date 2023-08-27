@@ -4,36 +4,27 @@ import Stripe from 'stripe';
 import { config } from "dotenv";
 import Doctor from "../models/doctorModel.js";
 import moment from "moment";
-import bodyParser from "body-parser";
 import { verifyUser } from "../middlewares/authMiddleware.js";
 import Appointment from "../models/appointmentModel.js";
 import Schedule from '../models/scheduleModel.js'
 
 
-
-
 config()
 const router = express.Router()
-
 const stripe = Stripe(process.env.STRIPE_API_KEY)
 
-//    stripe listen --forward-to localhost:5000/api/stripe/webhook
 router.post('/webhook', express.json({ type: 'application/json' }), async (req, res) => {
     let event = req.body
-    console.log("🚀 ~ file: stripe.js:26 ~ //router.post ~ event:", event)
     let data
     let payload = req.body
     if (event.type === 'checkout.session.completed') {
         const payment_intent = payload.data.object.payment_intent
-        console.log("🚀 ~ file: stripe.js:41 ~ //router.post ~ payment_intent:", payment_intent)
         stripe.customers
             .retrieve(payload.data.object.customer)
             .then(async (customer) => {
                 try {
                     const { docId, timeId, date, userId } = customer.metadata
-                    console.log({ docId, timeId, date, userId })
                     const patientId = userId.slice(1, -1)
-                    console.log("🚀 ~ file: stripe.js:49 ~ .then ~ patientId:", patientId)
                     const response = await Appointment.create({ docId, timeId, date, patientId, payment_intent })
                     if (response) res.status(200).json({ success: true })
                 } catch (error) {
