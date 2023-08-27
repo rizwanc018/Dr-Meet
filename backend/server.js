@@ -138,13 +138,7 @@ const io = new Server(server, {
         methods: ["GET", "POST"],
     }
 })
-// 
-// 
-// 
-// app.get('/', (req, res) => {
-//     res.status(200).json({ msg: "hello world" })
-// })
-// 
+
 io.on('connection', (socket) => {
     console.log('Connection....', socket.id)
 // 
