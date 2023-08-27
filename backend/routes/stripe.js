@@ -34,7 +34,7 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
     } catch (err) {
         console.log(err)
         // res.status(400).send(`Webhook Error: ${err.message}`);
-        return;
+        // return;
     }
     
     console.log("🚀 ~ file: stripe.js:33 ~ //router.post ~ event:", event)
