@@ -7,9 +7,7 @@ const appointmentController = {
     getAppointmentsByDate: asyncHandler(async (req, res) => {
         const docId = req.doctor._id
         let { date } = req.body
-        console.log("🚀 moment(date).startOf('day').toISOString():", moment(date).startOf('day').toISOString())
         date = moment(date).add(1, 'day').startOf('day').toISOString()
-        console.log("🚀 file: appointmetController.js:13 ~ getAppointmentsByDate:asyncHandler ~ date:", date)
         const appointments = await Appointment.find({ docId, date, finished: false })
             .populate('patientId', 'fname lname mobile')
             .populate('timeId', 'startTime endTime')
